@@ -2,70 +2,44 @@ import React from "react";
 import { useState } from "react";
 
 export default function App() {
+  const [sentence, setSentence] = useState("");
   return (
     <div>
-      <Calculator />
+      <Box sentence={sentence} setSentence={setSentence} />
     </div>
   );
 }
 
-function Calculator() {
-  const [weight, setWeight] = useState("");
-  const [height, setHeight] = useState("");
-  const [result, setResult] = useState(null);
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    if (!weight || !height) {
-      setResult("please enter the valid weight and height");
-      return;
-    }
-    const heightInMeters = height * 0.3048;
-    const bmi = weight / (heightInMeters * heightInMeters);
-    const BMI = Math.floor(bmi * 100) / 100;
-
-    setResult(BMI);
-  }
+function Box({ sentence, setSentence }) {
+  const sentences = sentence.trim().split(/\s+/);
+  const new_sentence = sentences.join("").length;
 
   return (
-    <div className="calculator">
-      <form onSubmit={handleSubmit}>
-        <h2>BMI Calculator</h2>
-        <label>Weight (kg)</label>
-        <input
-          type="number"
-          placeholder="Enter weight"
-          value={weight}
-          onChange={(e) => setWeight(Number(e.target.value))}
-        />
-        <label>Height (feet)</label>
-        <input
-          type="number"
-          placeholder="Enter height"
-          value={height}
-          onChange={(e) => setHeight(Number(e.target.value))}
-        />
-        <button type="submit">Submit</button>
-      </form>
-      <p></p>
+    <div className="container">
+      <textarea
+        id="textArea"
+        placeholder="Enter the strings"
+        value={sentence}
+        onChange={(e) => setSentence(e.target.value)}
+      ></textarea>
+      <p className="counter">Characters:{new_sentence}</p>
+      <p className="counter">
+        {<Result sentence={sentence} setSentence={setSentence} />}
+      </p>
+    </div>
+  );
+}
 
-      {result !== null && (
-        <>
-          <p>Your BMI is: {isNaN(result) ? result : result}</p>
-          {!isNaN(result) && (
-            <p>
-              Your result is:{" "}
-              {result < 18.5
-                ? "Underweight"
-                : result < 24.9
-                ? "Normal weight"
-                : result < 30
-                ? "Overweight"
-                : "Obese"}
-            </p>
-          )}
-        </>
-      )}
+function Result({ sentence, setSentence }) {
+  const sentences = sentence
+    .split(/[.!?]+/)
+    .filter((sentence) => sentence.trim().length > 0);
+  return (
+    <div>
+      <h2 className="counter"> sentence: {sentences.length}</h2>
+      <button className="counter" onClick={() => setSentence("")}>
+        Delete
+      </button>
     </div>
   );
 }
