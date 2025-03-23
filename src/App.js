@@ -43,5 +43,3 @@ function Result({ sentence, setSentence }) {
     </div>
   );
 }
-
-///
